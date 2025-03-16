@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Cars</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container flex justify-between items-center py-3">
+            <!-- Логотип -->
+            <div class="logo">
+                <img src="images/logo.png" alt="Logo" class="h-8">
+            </div>
+    
+            <!-- Навигация -->
+            <nav class="nav" id="nav">
+                <ul class="flex space-x-6">
+                    <li><a href="#" class="text-gray-700 hover:text-blue-500">Категории</a></li>
+                    <li><a href="#" class="text-gray-700 hover:text-blue-500">Автомобили</a></li>
+                    <li><a href="#" class="text-gray-700 hover:text-blue-500">Новости</a></li>
+                </ul>
+            </nav>
+    
+            <!-- Кнопки справа -->
+            <div class="header-actions flex items-center">
+                <button class="burger-menu" id="burger-menu">
+                    <span class="material-icons">menu</span>
+                </button>
+                <a href="/login" class="view-button">Войти</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container py-8">
+        <h2 class="text-2xl font-bold mb-6">Популярные категории</h2>
+        <div class="button-container">
+            <button class="scroll-button left" onclick="scrollCategories(-1)">&#10094;</button>
+            <div class="button-wrapper" id="category-wrapper">
+                <button class="category-button active">Electric</button>
+                <button class="category-button">SUV</button>
+                <button class="category-button">Sedan</button>
+                <button class="category-button">Pickup Truck</button>
+                <button class="category-button">Luxury</button>
+                <button class="category-button">Crossover</button>
+                <button class="category-button">Hybrid</button>
+                <button class="category-button">Diesel</button>
+                <button class="category-button">Coupe</button>
+                <button class="category-button">Hatchback</button>
+                <button class="category-button">Wagon</button>
+                <button class="category-button">Convertible</button>
+   
+            </div>
+            <button class="scroll-button right" onclick="scrollCategories(1)">&#10095;</button>
+      </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-6">
+            <div class="card">
+                <div class="image-container">
+                    <img src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/ecbc4cd8-5926-4f8e-b320-56d6e4e14665/ef196f60-908e-47e3-a94a-8ee9e06064eb.png" alt="Tesla Model S" />
+                </div>
+                <div class="p-4">
+                    <h3>Tesla Model 3</h3>
+                    <button class="text-left view-button">Смотреть</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="image-container">
+                    <img src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/cd74e70d-68ee-44dc-85a8-3edcf3ffe348/acd2cd85-209c-45f2-9033-8c1033ea8745.png" alt="Tesla Model S" />
+                </div>
+                <div class="p-4">
+                    <h3>Tesla Model S</h3>
+                    <button class="text-left view-button">Смотреть</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="image-container">
+                    <img src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/07827872-c533-4f5f-8931-3a911250aaf0/96548bd5-fb31-4570-b31a-517e2ebe5408.png" alt="Tesla Model S" />
+                </div>
+                <div class="p-4">
+                    <h3>Nissan Leaf</h3>
+                    <button class="text-left view-button">Смотреть</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="image-container">
+                    <img src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/77aeca88-d0af-4824-bbfd-d84ce2538524/1af0ca3f-5236-47a5-a487-32b49ec94f27.png" alt="Tesla Model S" />
+                </div>
+                <div class="p-4">
+                    <h3>Tesla Model Y</h3>
+                    <button class="text-left view-button">Смотреть</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="image-container">
+                    <img src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/0b86a23a-a3e2-476d-b459-4fa8ac478fa1/72670da9-7623-457c-8be7-e7c0254487d9.png" alt="Tesla Model S" />
+                </div>
+                <div class="p-4">
+                    <h3>Ford Mustang Mach-E</h3>
+                    <button class="text-left view-button">Смотреть</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="image-container">
+                    <img src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/607e07e8-c829-4ec3-ba7a-20771f79bd64/e86ac423-47a9-4dd6-a83f-888431ed12aa.png" alt="Tesla Model S" />
+                </div>
+                <div class="p-4">
+                    <h3>Ford F-150 Lightning</h3>
+                    <button class="text-left view-button">Смотреть</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="image-container">
+                    <img src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/bc5d4734-5bf0-4fda-acf3-265023f70310/a417d9ea-b2bf-40b1-80cc-24c0e84ea083.png" alt="Tesla Model S" />
+                </div>
+                <div class="p-4">
+                    <h3>BMW i3</h3>
+                    <button class="text-left view-button">Смотреть</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="image-container">
+                    <img src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/b89d2a6c-2900-4cb1-bf19-cb841e79def6/5d4eb686-487f-4322-88ca-d015d5bb0df8.png" alt="Tesla Model S" />
+                </div>
+                <div class="p-4">
+                    <h3>Volkswagen ID.4</h3>
+                    <button class="text-left view-button">Смотреть</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="image-container">
+                    <img src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/77aeca88-d0af-4824-bbfd-d84ce2538524/1af0ca3f-5236-47a5-a487-32b49ec94f27.png" alt="Tesla Model Y" />
+                </div>
+                <div class="p-4">
+                    <h3>Tesla Model Y</h3>
+                    <button class="text-left view-button">Смотреть</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="image-container">
+                    <img src="https://platform.cstatic-images.com/medium/in/v2/stock_photos/ecbc4cd8-5926-4f8e-b320-56d6e4e14665/ef196f60-908e-47e3-a94a-8ee9e06064eb.png" alt="Tesla Model 3" />
+                </div>
+                <div class="p-4">
+                    <h3>Tesla Model 3</h3>
+                    <button class="text-left view-button">Смотреть</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6">
+            <a href="#" class="text-blue-500 font-semibold hover:underline">Смотреть электрические автомобили</a>
+            <span class="mx-2">|</span>
+            <a href="#" class="text-blue-500 font-semibold hover:underline">Смотреть все автомобили</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-line"></div>
+        <div class="container text-center py-6">
+            <p class="text-gray-700">© 2025 Kuharchuk. Все права защищены.</p>
+            <div class="flex justify-center space-x-4 mt-2">
+                <a href="#" class="text-gray-700 hover:text-blue-500 transition duration-200">Политика конфиденциальности</a>
+                <a href="#" class="text-gray-700 hover:text-blue-500 transition duration-200">Условия использования</a>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+
+</body>
+</html>
