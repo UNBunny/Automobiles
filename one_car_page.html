@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Cars</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container flex justify-between items-center py-3">
+            <!-- Логотип -->
+            <div class="logo">
+                <img src="images/logo.png" alt="Logo" class="h-8">
+            </div>
+    
+            <!-- Навигация -->
+            <nav class="nav" id="nav">
+                <ul class="flex space-x-6">
+                    <li><a href="#" class="text-gray-700 hover:text-blue-500">Категории</a></li>
+                    <li><a href="#" class="text-gray-700 hover:text-blue-500">Автомобили</a></li>
+                    <li><a href="#" class="text-gray-700 hover:text-blue-500">Новости</a></li>
+                </ul>
+            </nav>
+    
+            <!-- Кнопки справа -->
+            <div class="header-actions flex items-center">
+                <button class="burger-menu" id="burger-menu">
+                    <span class="material-icons">menu</span>
+                </button>
+                <a href="/login" class="view-button">Войти</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Основная секция с фото и характеристиками -->
+        <div class="vehicle-section">
+            <div class="vehicle-image">
+                <img src="images/tesla.png" alt="Tesla Model S">
+            </div>
+            <div class="vehicle-specs">
+                <h1>Tesla Model S 2020</h1>
+                <table>
+                    <tr>
+                        <td>Год выпуска:</td>
+                        <td>2015</td>
+                    </tr>
+                    <tr>
+                        <td>Тип кузова:</td>
+                        <td>Хэтчбек</td>
+                    </tr>
+                    <tr>
+                        <td>Трансмиссия:</td>
+                        <td>Автоматическая</td>
+                    </tr>
+                    <tr>
+                        <td>Привод:</td>
+                        <td>4WD</td>
+                    </tr>
+                    <tr>
+                        <td>Поколение:</td>
+                        <td>1 поколение</td>
+                    </tr>
+                    <tr>
+                        <td>Двигатель:</td>
+                        <td>Электричество, 700 л.с.</td>
+                    </tr>
+                    <tr>
+                        <td>Расход топлива по трассе:</td>
+                        <td>0.0 л/100км</td>
+                    </tr>
+                    <tr>
+                        <td>Год приобретения:</td>
+                        <td>2021</td>
+                    </tr>
+                    <tr>
+                        <td>Пробег:</td>
+                        <td>58 000 км</td>
+                    </tr>
+                    <tr>
+                        <td>Руль:</td>
+                        <td>Левый</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="additional-images">
+            <h2>Дополнительные фото</h2>
+            <div class="image-grid">
+                <img src="images/zeekr.png" alt="Tesla Model S">
+                <img src="images/tesla.png" alt="Tesla Model S">
+                <img src="images/audiq8.jfif" alt="Tesla Model S">
+            </div>
+        </div>
+    
+        <!-- Описание -->
+        <div class="vehicle-description">
+            <p>
+                Про машину сложно рассказывать. Кто на Тесле не ездил, не поймет о чем речь, кто ездил, тот эту машину определенно купит.
+            </p>
+            <h2>Автомобильная часть:</h2>
+            <ul>
+                <li><strong>Динамика.</strong> Ускорение в 2,8 секунды до 100 сложно описать словами, особенно, когда нету никакой задержки в разгоне автомобиля.</li>
+                <li><strong>Управляемость.</strong> Как оно рулится? Это уровень Porsche Panamera и BMW M3. Как машина стоит на дороге? Намного лучше упомянутых машин.</li>
+                <li><strong>Интерьер.</strong> Качество материалов нормальное, увы это не уровень Porsche, но это, скажем, уровень BMW X5.</li>
+                <li><strong>Тишина.</strong> Просто тихо, тише чем все остальное. Когда ускоряешься - легкий zzzzip.</li>
+            </ul>
+        </div>
+    
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-line"></div>
+        <div class="container text-center py-6">
+            <p class="text-gray-700">© 2025 Kuharchuk. Все права защищены.</p>
+            <div class="flex justify-center space-x-4 mt-2">
+                <a href="#" class="text-gray-700 hover:text-blue-500 transition duration-200">Политика конфиденциальности</a>
+                <a href="#" class="text-gray-700 hover:text-blue-500 transition duration-200">Условия использования</a>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+
+</body>
+</html>
