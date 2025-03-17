@@ -424,3 +424,512 @@ body {
 .header-actions .view-button {
     font-weight: 300;
 }
+
+/* Стили для секции */
+.section {
+    padding: 2rem 0; /* Отступы сверху и снизу */
+}
+
+.brand-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* По умолчанию 2 столбца */
+    gap: 5rem;
+    padding: 0;
+    list-style: none;
+    margin: 0 auto; /* Центрирование списка */
+    max-width: 100%; /* Ограничение ширины */
+}
+
+.brand-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    color: #374151;
+    padding: 0.5rem; /* Отступы внутри элементов */
+    /* background-color: #f9fafb; Легкий фон для элементов */
+    border-radius: 0.5rem; /* Скругление углов */
+    transition: background-color 0.2s ease; /* Плавный ховер-эффект */
+}
+
+.brand-list li:hover {
+    background-color: #e5e7eb; /* Изменение фона при наведении */
+}
+
+.brand {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+/* Адаптивная сетка */
+@media (min-width: 640px) {
+    .brand-list {
+        grid-template-columns: repeat(2, 1fr); /* На экранах от 640px — 2 столбца */
+    }
+}
+
+@media (min-width: 768px) {
+    .brand-list {
+        grid-template-columns: repeat(3, 1fr); /* На экранах от 768px — 3 столбца */
+    }
+}
+
+@media (min-width: 1024px) {
+    .brand-list {
+        grid-template-columns: repeat(4, 1fr); /* На экранах от 1024px — 4 столбца */
+    }
+}
+
+
+
+/* Основные стили для карточки */
+.custom-card {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
+    gap: 1.5rem;
+    margin: 3rem 0;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    height: auto;
+    position: relative; /* Для позиционирования кнопки "Добавить в избранное" */
+}
+
+.custom-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px -1px rgba(0, 0, 0, 0.15);
+    background-color: #f9fafb;
+}
+
+/* Кнопка "Добавить в избранное" */
+.favorite-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem; /* Уменьшенный размер */
+    position: absolute; /* Абсолютное позиционирование */
+    top: 1rem; /* Отступ сверху */
+    right: 1rem; /* Отступ справа */
+    padding: 0.5rem;
+    transition: transform 0.2s, color 0.2s;
+    color: #374151; /* Цвет по умолчанию */
+    z-index: 10; /* Убедимся, что кнопка поверх других элементов */
+}
+
+.favorite-button:hover {
+    transform: scale(1.1); /* Увеличение при наведении */
+}
+
+.favorite-button.active {
+    color: #ff0000; /* Красный цвет при активации */
+}
+
+/* Контейнер для изображения */
+.custom-image-container {
+    width: 40%;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+    border-right: 2px solid #e5e7eb;
+    padding-right: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Контейнер для текста и кнопки */
+.custom-content {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.custom-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #374151;
+    margin: 0;
+}
+
+.custom-price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #374151;
+    margin: 0;
+}
+
+.custom-description {
+    font-size: 1rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* Кнопка "Смотреть описание" */
+.custom-view-button {
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 1.5rem;
+    position: absolute; /* Абсолютное позиционирование */
+    bottom: 1.5rem; /* Отступ снизу */
+    right: 1.5rem; /* Отступ справа */
+    width: auto; /* Ширина по содержимому */
+}
+
+.custom-view-button:hover {
+    background-color: #333333;
+}
+
+/* Стили для мобильных устройств */
+@media (max-width: 768px) {
+    .custom-card {
+        flex-direction: column; /* Вертикальное расположение */
+        padding: 1rem; /* Уменьшенный отступ */
+    }
+
+    .custom-image-container {
+        width: 100%; /* Картинка на всю ширину */
+        height: 180px; /* Уменьшенная высота для мобильных */
+        border-right: none; /* Убираем вертикальную линию */
+        padding-right: 0; /* Убираем отступ */
+        margin-bottom: 1rem; /* Отступ снизу */
+    }
+
+    .custom-content {
+        width: 100%; /* Контент на всю ширину */
+        text-align: center; /* Центрирование текста */
+    }
+
+    .custom-view-button {
+        position: static; /* Кнопка в потоке */
+        width: 100%; /* Кнопка на всю ширину */
+        margin-top: 1rem; /* Отступ сверху */
+    }
+
+    .favorite-button {
+        font-size: 1rem; /* Ещё меньше размер на мобильных */
+    }
+}
+
+
+/* Стили для выпадающего списка */
+/* Стили для выпадающего списка */
+.sort-select {
+    appearance: none;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.5rem 2rem 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    width: auto; /* Ширина по содержимому */
+    min-width: 150px; /* Минимальная ширина */
+}
+
+.sort-select:hover {
+    border-color: #9ca3af;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Стили для текста "Сортировать по" */
+.sort-label {
+    display: inline-block; /* По умолчанию текст виден */
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 768px) {
+    .sort-label {
+        display: none; /* Скрываем текст на мобильных устройствах */
+    }
+
+    .sort-select {
+        width: 100%; /* Выпадающий список занимает всю доступную ширину */
+        min-width: unset; /* Убираем минимальную ширину */
+        margin-left: 0; /* Убираем отступ слева */
+    }
+}
+
+.filters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Отступ между фильтром по годам и сортировкой */
+    margin: 3rem;
+}
+
+.year-filter {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    flex-wrap: wrap; /* Переносим элементы на новую строку, если не хватает места */
+}
+
+.year-range {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-grow: 1; /* Растягиваем на доступное пространство */
+}
+
+.year-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0; /* Запрещаем сжатие элементов */
+}
+
+.year-label {
+    font-size: 0.875rem;
+    color: #374151;
+    white-space: nowrap; /* Запрещаем перенос текста */
+}
+
+.year-input {
+    appearance: none;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    color: #374151;
+    width: 100px;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.year-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.apply-button {
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0; /* Запрещаем сжатие кнопки */
+    white-space: nowrap; /* Запрещаем перенос текста */
+}
+
+.apply-button:hover {
+    background-color: #333333;
+}
+
+.sorting {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+}
+
+.sort-label {
+    font-size: 0.875rem;
+    color: #374151;
+    white-space: nowrap; /* Запрещаем перенос текста */
+}
+
+.sort-select {
+    appearance: none;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sort-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 768px) {
+    .filters-container {
+        margin: 1rem; /* Уменьшаем отступы на мобильных устройствах */
+    }
+
+    .year-filter {
+        flex-direction: column; /* Вертикальное расположение */
+        gap: 0.5rem; /* Уменьшаем отступы между элементами */
+        padding: 0.75rem;
+    }
+
+    .year-range {
+        width: 100%;
+        flex-direction: row; /* Горизонтальное расположение внутри .year-range */
+        gap: 0.5rem;
+        flex-wrap: wrap; /* Переносим элементы на новую строку, если не хватает места */
+    }
+
+    .year-input-group {
+        width: auto; /* Ширина по содержимому */
+        flex-grow: 1; /* Растягиваем на доступное пространство */
+    }
+
+    .year-input {
+        width: 100%; /* Поля ввода на всю ширину */
+    }
+
+    .apply-button {
+        width: 100%; /* Кнопка на всю ширину */
+        margin-top: 0.5rem; /* Отступ сверху */
+    }
+
+    .sorting {
+        width: 100%; /* Сортировка на всю ширину */
+        flex-direction: row; /* Горизонтальное расположение */
+        align-items: center; /* Выравнивание по центру */
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+}
+
+/* Основные стили для секции с фото и характеристиками */
+.vehicle-section {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.vehicle-image {
+    width: 50%;
+}
+
+.vehicle-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
+.vehicle-specs {
+    width: 50%;
+}
+
+.vehicle-specs h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #374151;
+}
+
+.vehicle-specs table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.vehicle-specs table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.vehicle-specs table td:first-child {
+    font-weight: bold;
+    color: #374151;
+}
+
+/* Стили для описания */
+.vehicle-description {
+    margin-bottom: 2rem;
+}
+
+.vehicle-description h2 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: #374151;
+}
+
+.vehicle-description ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+}
+
+.vehicle-description ul li {
+    margin-bottom: 0.5rem;
+}
+
+/* Стили для дополнительных картинок */
+.additional-images h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #374151;
+}
+
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.image-grid img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 768px) {
+    .vehicle-section {
+        flex-direction: column;
+    }
+
+    .vehicle-image, .vehicle-specs {
+        width: 100%;
+    }
+
+    .image-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .image-grid {
+        grid-template-columns: 1fr;
+    }
+}

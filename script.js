@@ -60,7 +60,35 @@ document.addEventListener('DOMContentLoaded', function () {
     const burgerMenu = document.getElementById('burger-menu');
     const nav = document.getElementById('nav');
 
-    burgerMenu.addEventListener('click', function () {
-        nav.classList.toggle('active');
-    });
+    if (burgerMenu && nav) {
+        burgerMenu.addEventListener('click', function () {
+            console.log('Бургер-меню нажато'); // Отладочное сообщение
+            nav.classList.toggle('active');
+        });
+    } else {
+        console.error('Элементы бургер-меню или навигации не найдены!');
+    }
+});
+
+function toggleFavorite(event) {
+    event.stopPropagation(); // Останавливаем всплытие события, чтобы карточка не реагировала на клик
+    const button = event.target;
+    button.classList.toggle("active"); // Добавляем/убираем класс "active"
+    if (button.classList.contains("active")) {
+        button.textContent = "❤️"; // Красное сердечко
+    } else {
+        button.textContent = "♡"; // Пустое сердечко
+    }
+}
+
+document.querySelector('.apply-button').addEventListener('click', function() {
+    const yearFrom = document.querySelector('.year-input:first-of-type').value;
+    const yearTo = document.querySelector('.year-input:last-of-type').value;
+
+    if (yearFrom && yearTo) {
+        console.log(`Фильтр по годам: от ${yearFrom} до ${yearTo}`);
+        // Здесь можно добавить логику для фильтрации карточек по годам
+    } else {
+        alert('Пожалуйста, заполните оба поля.');
+    }
 });
