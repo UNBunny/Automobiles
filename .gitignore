@@ -1,0 +1,25 @@
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Environment
+.env
+docker/.env
+
+# Dependencies
+vendor/
+node_modules/
+
+# Logs
+*.log
+logs/
+
+# Cache
+tmp/
+*.tmp
+
+# DB
+*.sqlite
+*.sql
+/dbdata/
