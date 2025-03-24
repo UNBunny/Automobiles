@@ -3,22 +3,21 @@ const leftButton = document.querySelector('.scroll-button.left');
 
 function checkScroll() {
     if (categoryWrapper.scrollLeft > 0) {
-        leftButton.style.display = 'flex'; // Показываем левую стрелочку
+        leftButton.style.display = 'flex';
     } else {
-        leftButton.style.display = 'none'; // Скрываем левую стрелочку
+        leftButton.style.display = 'none'; 
     }
 }
 
 categoryWrapper.addEventListener('scroll', checkScroll);
 
 function scrollCategories(direction) {
-    const scrollAmount = 100; // Уменьшаем шаг прокрутки
+    const scrollAmount = 100; 
     const container = document.getElementById('category-wrapper');
 
-    // Вычисляем новое положение прокрутки
+
     const newScrollLeft = container.scrollLeft + direction * scrollAmount;
 
-    // Ограничиваем прокрутку, чтобы не выйти за пределы
     if (newScrollLeft < 0) {
         container.scrollTo({ left: 0, behavior: 'smooth' });
     } else if (newScrollLeft > container.scrollWidth - container.clientWidth) {
@@ -27,16 +26,14 @@ function scrollCategories(direction) {
         container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
     }
 
-    // Проверяем положение прокрутки после завершения анимации
     setTimeout(checkScroll, 300);
 }
-// Инициализация при загрузке страницы
 checkScroll();
 
 // Функция для прокрутки категорий
 function scrollCategories(direction) {
     const container = document.getElementById('category-wrapper');
-    const scrollAmount = 500; // Шаг прокрутки
+    const scrollAmount = 500; 
     container.scrollBy({
         left: direction * scrollAmount,
         behavior: 'smooth'
@@ -46,23 +43,23 @@ function scrollCategories(direction) {
 // Функция для выбора категории
 document.querySelectorAll('.category-button').forEach(button => {
     button.addEventListener('click', () => {
-        // Убираем активный класс у всех кнопок
+    
         document.querySelectorAll('.category-button').forEach(btn => {
             btn.classList.remove('active');
         });
-        // Добавляем активный класс к нажатой кнопке
+        //
         button.classList.add('active');
     });
 });
 
-// script.js
+// Бургер меню
 document.addEventListener('DOMContentLoaded', function () {
     const burgerMenu = document.getElementById('burger-menu');
     const nav = document.getElementById('nav');
 
     if (burgerMenu && nav) {
         burgerMenu.addEventListener('click', function () {
-            console.log('Бургер-меню нажато'); // Отладочное сообщение
+            console.log('Бургер-меню нажато'); 
             nav.classList.toggle('active');
         });
     } else {
@@ -70,10 +67,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+
 function toggleFavorite(event) {
-    event.stopPropagation(); // Останавливаем всплытие события, чтобы карточка не реагировала на клик
+    event.stopPropagation(); 
     const button = event.target;
-    button.classList.toggle("active"); // Добавляем/убираем класс "active"
+    button.classList.toggle("active"); 
     if (button.classList.contains("active")) {
         button.textContent = "❤️"; // Красное сердечко
     } else {
@@ -87,7 +85,7 @@ document.querySelector('.apply-button').addEventListener('click', function() {
 
     if (yearFrom && yearTo) {
         console.log(`Фильтр по годам: от ${yearFrom} до ${yearTo}`);
-        // Здесь можно добавить логику для фильтрации карточек по годам
+    
     } else {
         alert('Пожалуйста, заполните оба поля.');
     }
