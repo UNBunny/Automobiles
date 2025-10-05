@@ -1,55 +1,41 @@
 <?php
-require_once 'config.php';
+require_once 'bootstrap.php';
 
-if (!isset($_GET['id'])) {
-    header("Location: /");
-    exit;
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    Utils::redirect('/');
 }
 
-$carId = $_GET['id'];
+$carId = (int)$_GET['id'];
 
-// Get car details
-$stmt = $pdo->prepare("
-    SELECT c.*, m.name as manufacturer_name, m.logo_url as manufacturer_logo, 
-           b.name as body_type, e.name as engine_type
-    FROM cars c
-    JOIN manufacturers m ON c.manufacturer_id = m.id
-    JOIN body_types b ON c.body_type_id = b.id
-    JOIN engine_types e ON c.engine_type_id = e.id
-    WHERE c.id = ?
-");
-$stmt->execute([$carId]);
-$car = $stmt->fetch(PDO::FETCH_ASSOC);
+// Используем модель
+$carModel = new CarModel();
+$car = $carModel->getById($carId);
 
 if (!$car) {
-    header("Location: /");
-    exit;
+    Utils::redirect('/');
 }
 
-// Update view count
-$pdo->prepare("UPDATE cars SET views = views + 1 WHERE id = ?")->execute([$carId]);
+// Увеличиваем счетчик просмотров
+$carModel->incrementViews($carId);
+
+// Получаем дополнительные данные через базу данных
+$db = Database::getInstance();
 
 // Get car images
-$imagesStmt = $pdo->prepare("SELECT * FROM car_images WHERE car_id = ?");
-$imagesStmt->execute([$carId]);
-$images = $imagesStmt->fetchAll(PDO::FETCH_ASSOC);
+$images = $db->fetchAll("SELECT * FROM car_images WHERE car_id = ?", [$carId]);
 
 // Get car features
-$featuresStmt = $pdo->prepare("SELECT * FROM car_features WHERE car_id = ?");
-$featuresStmt->execute([$carId]);
-$features = $featuresStmt->fetchAll(PDO::FETCH_ASSOC);
+$features = $db->fetchAll("SELECT * FROM car_features WHERE car_id = ?", [$carId]);
 
 // Get car categories
-$categoriesStmt = $pdo->prepare("
+$categories = $db->fetchAll("
     SELECT cat.name, cat.slug 
     FROM car_categories cc
     JOIN categories cat ON cc.category_id = cat.id
     WHERE cc.car_id = ?
-");
-$categoriesStmt->execute([$carId]);
-$categories = $categoriesStmt->fetchAll(PDO::FETCH_ASSOC);
+", [$carId]);
 
-$pageTitle = $car['manufacturer_name'] . " " . $car['model'];
+$pageTitle = ($car['manufacturer_name'] ?? '') . " " . ($car['model'] ?? '');
 require_once 'templates/header.php';
 ?>
 
@@ -57,53 +43,53 @@ require_once 'templates/header.php';
     <!-- Основная секция с фото и характеристиками -->
     <div class="vehicle-section">
         <div class="vehicle-image">
-            <img src="<?= htmlspecialchars($car['main_image_url']) ?>" alt="<?= htmlspecialchars($car['manufacturer_name'] . ' ' . $car['model']) ?>">
+            <img src="<?= Utils::escape($car['main_image_url'] ?? "") ?>" alt="<?= Utils::escape(($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? '')) ?>">
         </div>
         <div class="vehicle-specs">
-            <h1><?= htmlspecialchars($car['manufacturer_name'] . ' ' . $car['model'] . ' ' . $car['year']) ?></h1>
+            <h1><?= Utils::escape(($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? '') . ' ' . ($car['year'] ?? '')) ?></h1>
             <table>
                 <tr>
                     <td>Год выпуска:</td>
-                    <td><?= htmlspecialchars($car['year']) ?></td>
+                    <td><?= Utils::escape($car['year'] ?? "") ?></td>
                 </tr>
                 <tr>
                     <td>Тип кузова:</td>
-                    <td><?= htmlspecialchars($car['body_type']) ?></td>
+                    <td><?= Utils::escape($car['body_type_name'] ?? "") ?></td>
                 </tr>
                 <tr>
                     <td>Тип двигателя:</td>
-                    <td><?= htmlspecialchars($car['engine_type']) ?></td>
+                    <td><?= Utils::escape($car['engine_type_name'] ?? "") ?></td>
                 </tr>
                 <tr>
                     <td>Мощность:</td>
-                    <td><?= htmlspecialchars($car['power_hp']) ?> л.с.</td>
+                    <td><?= Utils::escape($car['power_hp'] ?? "") ?> л.с.</td>
                 </tr>
                 <tr>
                     <td>Разгон 0-100 км/ч:</td>
-                    <td><?= htmlspecialchars($car['acceleration_0_100']) ?> сек</td>
+                    <td><?= Utils::escape($car['acceleration_0_100'] ?? "") ?> сек</td>
                 </tr>
                 <tr>
                     <td>Макс. скорость:</td>
-                    <td><?= htmlspecialchars($car['top_speed_kmh']) ?> км/ч</td>
+                    <td><?= Utils::escape($car['top_speed_kmh'] ?? "") ?> км/ч</td>
                 </tr>
-                <?php if ($car['engine_type'] === 'Электрический'): ?>
+                <?php if (($car['engine_type_name'] ?? '') === 'Электрический'): ?>
                 <tr>
                     <td>Ёмкость батареи:</td>
-                    <td><?= htmlspecialchars($car['battery_capacity_kwh']) ?> кВт·ч</td>
+                    <td><?= Utils::escape($car['battery_capacity_kwh'] ?? "") ?> кВт·ч</td>
                 </tr>
                 <tr>
                     <td>Запас хода:</td>
-                    <td><?= htmlspecialchars($car['range_km']) ?> км</td>
+                    <td><?= Utils::escape($car['range_km'] ?? "") ?> км</td>
                 </tr>
                 <?php endif; ?>
                 <tr>
                     <td>Цена:</td>
-                    <td>$<?= number_format($car['price'], 2) ?></td>
+                    <td>$<?= number_format($car['price'] ?? 0, 2) ?></td>
                 </tr>
                 <?php foreach ($features as $feature): ?>
                 <tr>
-                    <td><?= htmlspecialchars($feature['feature_name']) ?>:</td>
-                    <td><?= htmlspecialchars($feature['feature_value']) ?></td>
+                    <td><?= Utils::escape($feature['feature_name'] ?? "") ?>:</td>
+                    <td><?= Utils::escape($feature['feature_value'] ?? "") ?></td>
                 </tr>
                 <?php endforeach; ?>
             </table>
@@ -116,7 +102,7 @@ require_once 'templates/header.php';
         <div class="image-grid">
             <?php foreach ($images as $image): ?>
                 <?php if (!$image['is_main']): ?>
-                <img src="<?= htmlspecialchars($image['image_url']) ?>" alt="<?= htmlspecialchars($image['alt_text'] ?: $car['manufacturer_name'] . ' ' . $car['model']) ?>">
+                <img src="<?= Utils::escape($image['image_url'] ?? "") ?>" alt="<?= Utils::escape($image['alt_text'] ?: (($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? ''))) ?>">
                 <?php endif; ?>
             <?php endforeach; ?>
         </div>
@@ -125,13 +111,13 @@ require_once 'templates/header.php';
 
     <!-- Описание -->
     <div class="vehicle-description">
-        <p><?= htmlspecialchars($car['description']) ?></p>
+        <p><?= Utils::escape($car['description'] ?? "") ?></p>
         
         <?php if (!empty($categories)): ?>
         <h2>Категории:</h2>
         <div class="categories">
             <?php foreach ($categories as $category): ?>
-                <span class="category-tag"><?= htmlspecialchars($category['name']) ?></span>
+                <span class="category-tag"><?= Utils::escape($category['name'] ?? "") ?></span>
             <?php endforeach; ?>
         </div>
         <?php endif; ?>

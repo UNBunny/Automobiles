@@ -1,15 +1,19 @@
 <?php
-require_once 'config.php';
-require_once 'templates/header.php';
+require_once 'bootstrap.php';
 
 // По умолчанию выбираем категорию "electric"
-$selectedCategory = isset($_GET['category']) ? $_GET['category'] : 'electric';
+$selectedCategory = $_GET['category'] ?? 'electric';
 $pageTitle = "Electric Cars";
 
-// Получаем название выбранной категории
-$stmtCat = $pdo->prepare("SELECT name FROM categories WHERE slug = ?");
-$stmtCat->execute([$selectedCategory]);
-$currentCategory = $stmtCat->fetch();
+// Используем модели
+$carModel = new CarModel();
+$categoryModel = new CategoryModel();
+
+// Получаем данные категории
+$currentCategory = $categoryModel->getBySlug($selectedCategory);
+$allCategories = $categoryModel->getAll();
+
+require_once 'templates/header.php';
 ?>
 
 <div class="container py-8">
@@ -17,57 +21,45 @@ $currentCategory = $stmtCat->fetch();
     <div class="button-container">
         <button class="scroll-button left" onclick="scrollCategories(-1)">&#10094;</button>
         <div class="button-wrapper" id="category-wrapper">
-            <?php
-            $stmt = $pdo->query("SELECT * FROM categories");
-            while ($category = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $isActive = ($selectedCategory === $category['slug']) ? 'active' : '';
-                echo '<a href="?category=' . $category['slug'] . '" class="category-button ' . $isActive . ' no-underline">' . 
-                     escape($category['name']) . '</a>';
-            }
-            ?>
+            <?php foreach ($allCategories as $category): ?>
+                <?php $isActive = ($selectedCategory === $category['slug']) ? 'active' : ''; ?>
+                <a href="?category=<?= $category['slug'] ?>" class="category-button <?= $isActive ?> no-underline">
+                    <?= Utils::escape($category['name']) ?>
+                </a>
+            <?php endforeach; ?>
         </div>
         <button class="scroll-button right" onclick="scrollCategories(1)">&#10095;</button>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-6">
         <?php
-        $query = "
-            SELECT c.*, m.name as manufacturer_name 
-            FROM cars c
-            JOIN manufacturers m ON c.manufacturer_id = m.id
-            JOIN car_categories cc ON c.id = cc.car_id 
-            JOIN categories cat ON cc.category_id = cat.id
-            WHERE cat.slug = :category
-            ORDER BY c.created_at DESC 
-            LIMIT 10
-        ";
+        $filters = ['category' => $selectedCategory];
+        $cars = $carModel->getAll($filters, 'newest', 10);
         
-        $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':category', $selectedCategory);
-        $stmt->execute();
-        
-        if ($stmt->rowCount() > 0) {
-            while ($car = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                echo '<div class="card">
+        if (!empty($cars)):
+            foreach ($cars as $car):
+        ?>
+                <div class="card">
                     <div class="image-container">
-                        <img src="' . escape($car['main_image_url']) . '" alt="' . 
-                        escape($car['manufacturer_name']) . ' ' . escape($car['model']) . '" />
+                        <img src="<?= Utils::escape($car['main_image_url']) ?>" 
+                             alt="<?= Utils::escape($car['manufacturer_name'] . ' ' . $car['model']) ?>" />
                     </div>
                     <div class="p-4">
-                        <h3>' . escape($car['manufacturer_name'] . ' ' . escape($car['model'])) . '</h3>
-                        <a href="/car-details.php?id=' . $car['id'] . '" class="text-left view-button">Смотреть</a>
+                        <h3><?= Utils::escape($car['manufacturer_name'] . ' ' . $car['model']) ?></h3>
+                        <a href="/car-details.php?id=<?= $car['id'] ?>" class="text-left view-button">Смотреть</a>
                     </div>
-                </div>';
-            }
-        } else {
-            echo '<p class="col-span-full text-center py-8">Нет автомобилей в выбранной категории</p>';
-        }
+                </div>
+        <?php 
+            endforeach;
+        else:
         ?>
+            <p class="col-span-full text-center py-8">Нет автомобилей в выбранной категории</p>
+        <?php endif; ?>
     </div>
 
     <div class="mt-6">
         <a href="/category.php?category=<?= $selectedCategory ?>" class="text-blue-500 font-semibold hover:underline no-underline">
-            Смотреть все <?= escape($currentCategory['name'] ?? 'электрические') ?> автомобили
+            Смотреть все <?= Utils::escape($currentCategory['name'] ?? 'электрические') ?> автомобили
         </a>
         <span class="mx-2">|</span>
         <a href="/cars.php" class="text-blue-500 font-semibold hover:underline no-underline">Смотреть все автомобили</a>

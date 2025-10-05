@@ -1,53 +1,30 @@
 <?php
-require_once 'config.php';
-require_once 'templates/header.php';
+require_once 'bootstrap.php';
 
-$selectedCategory = isset($_GET['category']) ? $_GET['category'] : 'electric';
-$sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
+$selectedCategory = $_GET['category'] ?? 'electric';
+$sort = $_GET['sort'] ?? 'newest';
 $pageTitle = "Electric Cars";
 
-// Получаем название выбранной категории
-$stmtCat = $pdo->prepare("SELECT name FROM categories WHERE slug = ?");
-$stmtCat->execute([$selectedCategory]);
-$currentCategory = $stmtCat->fetch();
+// Используем модели
+$carModel = new CarModel();
+$categoryModel = new CategoryModel();
 
-// Формируем базовый запрос
-$query = "
-    SELECT c.*, m.name as manufacturer_name 
-    FROM cars c
-    JOIN manufacturers m ON c.manufacturer_id = m.id
-    JOIN car_categories cc ON c.id = cc.car_id 
-    JOIN categories cat ON cc.category_id = cat.id
-    WHERE cat.slug = :category
-";
-
-// Добавляем сортировку в зависимости от выбора
-switch ($sort) {
-    case 'price_asc':
-        $query .= " ORDER BY c.price ASC";
-        break;
-    case 'price_desc':
-        $query .= " ORDER BY c.price DESC";
-        break;
-    case 'popularity':
-        $query .= " ORDER BY c.views DESC";
-        break;
-    case 'year_asc':
-        $query .= " ORDER BY c.year ASC";
-        break;
-    default: // 'newest'
-        $query .= " ORDER BY c.year DESC";
+// Получаем данные категории
+$currentCategory = $categoryModel->getBySlug($selectedCategory);
+if (!$currentCategory) {
+    Utils::redirect('/');
 }
 
-$query .= " LIMIT 10";
+$pageTitle = $currentCategory['name'] . " - Автомобили";
 
-// Подготавливаем и выполняем запрос
-$stmt = $pdo->prepare($query);
-$stmt->bindParam(':category', $selectedCategory);
-$stmt->execute();
+// Получаем автомобили категории
+$filters = ['category' => $selectedCategory];
+$cars = $carModel->getAll($filters, $sort, 10);
 
-// Формируем URL для сортировки с сохранением других параметров
+// Формируем URL для сортировки
 $baseUrl = '?' . http_build_query(['category' => $selectedCategory]);
+
+require_once 'templates/header.php';
 ?>
 
 <div class="container py-8">

@@ -30,7 +30,7 @@
                 <button class="burger-menu" id="burger-menu">
                     <span class="material-icons">menu</span>
                 </button>
-                <a href="/login" class="view-button">Войти</a>
+                <a href="/admin" class="view-button">Админ</a>
             </div>
         </div>
     </header>
