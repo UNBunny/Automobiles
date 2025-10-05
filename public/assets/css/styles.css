@@ -447,22 +447,84 @@ body {
 .brand-list li {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 1rem;
+    gap: 1rem;
+    font-size: 1.1rem;
     color: #374151;
-    padding: 0.5rem; 
-    border-radius: 0.5rem; /* Скругление углов */
-    transition: background-color 0.2s ease; /* Плавный ховер-эффект */
+    padding: 0.75rem; 
+    border-radius: 0.5rem; 
+    transition: background-color 0.2s ease;
+    min-height: 64px; /* Минимальная высота для единообразия */
 }
 
 .brand-list li:hover {
-    background-color: #e5e7eb; /* Изменение фона при наведении */
+    background-color: #e5e7eb; 
+}
+
+.brand-list li a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+}
+
+.brand, .brand-placeholder {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0; /* Не сжимается */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .brand {
-    width: 48px;
-    height: 48px;
     object-fit: contain;
+    background: #f9f9f9;
+    border: 1px solid #e1e5e9;
+}
+
+.brand-placeholder {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    flex-grow: 1;
+}
+
+.brand-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #1f2937;
+}
+
+.brand-count {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Дополнительные правила для гарантии правильного расположения */
+.brand-list li a {
+    flex-direction: row !important;
+}
+
+.brand-list li a > .brand,
+.brand-list li a > .brand-placeholder {
+    order: 1;
+    flex-shrink: 0 !important;
+}
+
+.brand-list li a > .brand-text {
+    order: 2;
+    flex: 1;
 }
 
 /* Адаптивная сетка */
