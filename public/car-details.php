@@ -1,8 +1,25 @@
 <?php
 require_once 'bootstrap.php';
 
+$errorMessage = null;
+
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    Utils::redirect('/');
+    $errorMessage = "Некорректный формат ID автомобиля. Пожалуйста, проверьте ссылку.";
+    $pageTitle = "Ошибка - Автомобиль не найден";
+    require_once 'templates/header.php';
+    ?>
+    <div class="error-page">
+        <div class="error-code">400</div>
+        <h1 class="error-title">Некорректный запрос</h1>
+        <p class="error-description"><?= Utils::escape($errorMessage) ?></p>
+        <div class="error-actions">
+            <a href="/" class="error-button">На главную</a>
+            <a href="/cars.php" class="error-button error-button-secondary">Все автомобили</a>
+        </div>
+    </div>
+    <?php
+    require_once 'templates/footer.php';
+    exit;
 }
 
 $carId = (int)$_GET['id'];
@@ -12,7 +29,25 @@ $carModel = new CarModel();
 $car = $carModel->getById($carId);
 
 if (!$car) {
-    Utils::redirect('/');
+    $pageTitle = "Автомобиль не найден";
+    require_once 'templates/header.php';
+    ?>
+    <div class="error-page">
+        <div class="error-code">404</div>
+        <h1 class="error-title">Автомобиль не найден</h1>
+        <p class="error-description">
+            Автомобиль с ID <?= $carId ?> не существует или был удален из базы данных.
+            Возможно, вы перешли по устаревшей ссылке.
+        </p>
+        <div class="error-actions">
+            <a href="/cars.php" class="error-button">Все автомобили</a>
+            <a href="/" class="error-button error-button-secondary">На главную</a>
+            <a href="/manufacturers.php" class="error-button error-button-secondary">Производители</a>
+        </div>
+    </div>
+    <?php
+    require_once 'templates/footer.php';
+    exit;
 }
 
 // Увеличиваем счетчик просмотров
@@ -39,6 +74,18 @@ $pageTitle = ($car['manufacturer_name'] ?? '') . " " . ($car['model'] ?? '');
 require_once 'templates/header.php';
 ?>
 
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <a href="/">Главная</a>
+    <span class="breadcrumbs-separator">/</span>
+    <a href="/cars.php">Автомобили</a>
+    <span class="breadcrumbs-separator">/</span>
+    <span class="breadcrumbs-current"><?= Utils::escape(($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? '')) ?></span>
+</div>
+
+<!-- Кнопка назад -->
+<a href="/cars.php" class="back-button">← Вернуться к списку автомобилей</a>
+
 <div class="container">
     <!-- Основная секция с фото и характеристиками -->
     <div class="vehicle-section">
@@ -47,7 +94,11 @@ require_once 'templates/header.php';
         </div>
         <div class="vehicle-specs">
             <h1><?= Utils::escape(($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? '') . ' ' . ($car['year'] ?? '')) ?></h1>
-            <table>
+            <div class="view-counter">
+                <span class="material-icons">visibility</span>
+                <span><?= number_format($car['views'] ?? 0) ?> просмотров</span>
+            </div>
+            <table id="specs-table">
                 <tr>
                     <td>Год выпуска:</td>
                     <td><?= Utils::escape($car['year'] ?? "") ?></td>
@@ -93,6 +144,7 @@ require_once 'templates/header.php';
                 </tr>
                 <?php endforeach; ?>
             </table>
+            <button id="toggle-specs" class="show-more-btn" onclick="toggleSpecs()">Показать все характеристики</button>
         </div>
     </div>
 

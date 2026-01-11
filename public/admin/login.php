@@ -7,6 +7,13 @@ if (Auth::check()) {
 }
 
 $error = '';
+$oauthError = '';
+
+// Проверяем ошибки OAuth
+if (isset($_SESSION['oauth_error'])) {
+    $oauthError = $_SESSION['oauth_error'];
+    unset($_SESSION['oauth_error']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = Utils::sanitizeString($_POST['username'] ?? '');
@@ -18,6 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Неверный логин или пароль';
     }
 }
+
+// Загружаем конфигурацию OAuth
+$oauthConfig = require_once '../config/oauth.php';
 ?>
 
 <!DOCTYPE html>
@@ -166,6 +176,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .back-to-site a:hover {
             text-decoration: underline;
         }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .oauth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-oauth {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #333;
+            background: white;
+        }
+
+        .btn-oauth:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-oauth.yandex {
+            border-color: #fc3f1d;
+            color: #fc3f1d;
+        }
+
+        .btn-oauth.yandex:hover {
+            background: #fff5f4;
+            border-color: #fc3f1d;
+        }
+
+        .btn-oauth svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -179,6 +260,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="error">
                 <i class="fas fa-exclamation-triangle"></i>
                 <?php echo escape($error); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($oauthError): ?>
+            <div class="error">
+                <i class="fas fa-exclamation-triangle"></i>
+                <?php echo escape($oauthError); ?>
             </div>
         <?php endif; ?>
 
@@ -199,11 +287,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </button>
         </form>
 
-        <div class="login-info">
-            <h4><i class="fas fa-info-circle"></i> Данные для входа:</h4>
-            <p><strong>Логин:</strong> admin</p>
-            <p><strong>Пароль:</strong> admin123</p>
+        <?php if ($oauthConfig['yandex']['enabled']): ?>
+        <div class="divider">
+            <span>или</span>
         </div>
+
+        <div class="oauth-buttons">
+            <?php 
+                $yandexOAuth = new YandexOAuth(
+                    $oauthConfig['yandex']['client_id'],
+                    $oauthConfig['yandex']['client_secret'],
+                    $oauthConfig['yandex']['redirect_uri']
+                );
+                $yandexAuthUrl = $yandexOAuth->getAuthUrl();
+            ?>
+            <a href="<?php echo escape($yandexAuthUrl); ?>" class="btn-oauth yandex">
+<svg fill="none"><path d="M2.04 12c0-5.523 4.476-10 10-10 5.522 0 10 4.477 10 10s-4.478 10-10 10c-5.524 0-10-4.477-10-10z" fill="#FC3F1D"/><path d="M13.32 7.666h-.924c-1.694 0-2.585.858-2.585 2.123 0 1.43.616 2.1 1.881 2.959l1.045.704-3.003 4.487H7.49l2.695-4.014c-1.55-1.111-2.42-2.19-2.42-4.015 0-2.288 1.595-3.85 4.62-3.85h3.003v11.868H13.32V7.666z" fill="#fff"/></svg>
+                Войти через Yandex
+            </a>
+        </div>
+        <?php endif; ?>
 
         <div class="back-to-site">
             <a href="../index.php">

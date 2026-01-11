@@ -15,11 +15,14 @@ services:
     build: ./php
     volumes:
       - ./public:/var/www/html/public
+      - ./.env:/var/www/html/.env:ro
     environment:
       DB_HOST: postgres
       DB_NAME: car_db
       DB_USER: nikita
       DB_PASSWORD: root
+    env_file:
+      - .env
 
   postgres:
     image: postgres:12

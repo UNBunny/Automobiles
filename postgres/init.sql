@@ -1,3 +1,17 @@
+-- Таблица пользователей для админ-панели
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    full_name VARCHAR(100),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login TIMESTAMP,
+    yandex_id VARCHAR(100) UNIQUE,
+    oauth_provider VARCHAR(20)
+);
+
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -74,6 +88,11 @@ CREATE TABLE car_categories (
     category_id INTEGER REFERENCES categories(id),
     PRIMARY KEY (car_id, category_id)
 );
+
+-- Создаем администратора по умолчанию (admin/admin123)
+-- Пароль хешируется с помощью password_hash() в PHP
+INSERT INTO users (username, password_hash, email, full_name) VALUES
+('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@example.com', 'Administrator');
 
 -- Заполняем категории (как в HTML)
 INSERT INTO categories (name, slug) VALUES

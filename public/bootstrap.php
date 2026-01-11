@@ -1,6 +1,36 @@
 <?php
 
 /**
+ * Загрузка переменных окружения из .env файла
+ */
+$envFile = __DIR__ . '/../.env';
+if (file_exists($envFile)) {
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        // Пропускаем комментарии
+        if (strpos(trim($line), '#') === 0) {
+            continue;
+        }
+        
+        // Парсим переменные окружения
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value);
+            
+            // Удаляем кавычки если есть
+            $value = trim($value, '"\'');
+            
+            // Устанавливаем переменную окружения
+            if (!array_key_exists($key, $_ENV)) {
+                $_ENV[$key] = $value;
+                putenv("$key=$value");
+            }
+        }
+    }
+}
+
+/**
  * Автозагрузчик классов
  */
 spl_autoload_register(function ($className) {
@@ -21,6 +51,12 @@ spl_autoload_register(function ($className) {
     
     return false;
 });
+
+// Настройки безопасности для сессий
+ini_set('session.cookie_httponly', '1');
+ini_set('session.cookie_samesite', 'Lax'); // Lax позволяет OAuth редиректы!
+ini_set('session.use_strict_mode', '1');
+ini_set('session.cookie_secure', '0'); // Установите '1' если используете HTTPS
 
 // Старт сессии если еще не стартована
 if (session_status() === PHP_SESSION_NONE) {

@@ -16,6 +16,11 @@ $allCategories = $categoryModel->getAll();
 require_once 'templates/header.php';
 ?>
 
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <span class="breadcrumbs-current">Главная</span>
+</div>
+
 <div class="container py-8">
     <h2 class="text-2xl font-bold mb-6">Популярные категории</h2>
     <div class="button-container">
@@ -39,7 +44,7 @@ require_once 'templates/header.php';
         if (!empty($cars)):
             foreach ($cars as $car):
         ?>
-                <div class="card">
+                <div class="card card-hover">
                     <div class="image-container">
                         <img src="<?= Utils::escape($car['main_image_url']) ?>" 
                              alt="<?= Utils::escape($car['manufacturer_name'] . ' ' . $car['model']) ?>" />

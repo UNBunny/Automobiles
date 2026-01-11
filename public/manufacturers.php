@@ -9,6 +9,13 @@ $manufacturers = $manufacturerModel->getAll();
 require_once 'templates/header.php';
 ?>
 
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <a href="/">Главная</a>
+    <span class="breadcrumbs-separator">/</span>
+    <span class="breadcrumbs-current">Производители</span>
+</div>
+
 <div class="section">
     <div class="container py-8">
         <h2 class="text-2xl font-bold mb-6">Список производителей (<?= count($manufacturers) ?>)</h2>

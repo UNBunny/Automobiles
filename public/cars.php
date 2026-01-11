@@ -43,10 +43,63 @@ $currentUrl = strtok($_SERVER['REQUEST_URI'], '?');
 $queryParams = $_GET;
 unset($queryParams['sort']);
 $filterUrl = $currentUrl . (!empty($queryParams) ? '?' . http_build_query($queryParams) : '');
+
+// Определяем есть ли активные фильтры
+$hasActiveFilters = !empty($filters);
 ?>
+
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <a href="/">Главная</a>
+    <span class="breadcrumbs-separator">/</span>
+    <span class="breadcrumbs-current">Все автомобили</span>
+</div>
 
 <div class="container py-8">
 
+<?php if ($hasActiveFilters): ?>
+<!-- Активные фильтры -->
+<div class="active-filters">
+    <?php if (isset($filters['category'])): 
+        $category = $categoryModel->getBySlug($filters['category']);
+    ?>
+        <span class="filter-tag">
+            Категория: <?= Utils::escape($category['name'] ?? $filters['category']) ?>
+            <button class="filter-tag-remove" onclick="removeFilter('category')" title="Удалить фильтр">×</button>
+        </span>
+    <?php endif; ?>
+    
+    <?php if (isset($filters['manufacturer'])): 
+        $manufacturer = $manufacturerModel->getBySlug($filters['manufacturer']);
+    ?>
+        <span class="filter-tag">
+            Производитель: <?= Utils::escape($manufacturer['name'] ?? $filters['manufacturer']) ?>
+            <button class="filter-tag-remove" onclick="removeFilter('manufacturer')" title="Удалить фильтр">×</button>
+        </span>
+    <?php endif; ?>
+    
+    <?php if (isset($filters['year_from']) || isset($filters['year_to'])): ?>
+        <span class="filter-tag">
+            Год: <?= isset($filters['year_from']) ? $filters['year_from'] : '—' ?> - <?= isset($filters['year_to']) ? $filters['year_to'] : '—' ?>
+            <button class="filter-tag-remove" onclick="removeFilter('year_from'); removeFilter('year_to');" title="Удалить фильтр">×</button>
+        </span>
+    <?php endif; ?>
+    
+    <?php if (isset($filters['search'])): ?>
+        <span class="filter-tag">
+            Поиск: "<?= Utils::escape($filters['search']) ?>"
+            <button class="filter-tag-remove" onclick="removeFilter('search')" title="Удалить фильтр">×</button>
+        </span>
+    <?php endif; ?>
+    
+    <button class="clear-filters-btn" onclick="clearAllFilters()">Сбросить все фильтры</button>
+</div>
+<?php endif; ?>
+
+
+    <div class="results-summary">
+        <p>Найдено результатов: <strong><?= number_format($totalCars) ?></strong></p>
+    </div>
 
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">
