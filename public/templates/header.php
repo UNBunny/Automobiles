@@ -65,13 +65,13 @@
                     <li><a href="/cars.php" class="text-gray-700 hover:text-blue-500" title="Каталог всех автомобилей">Автомобили</a></li>
                     <li><a href="/manufacturers.php" class="text-gray-700 hover:text-blue-500" title="Список производителей">Производители</a></li>
                     <li><a href="/faq.php" class="text-gray-700 hover:text-blue-500" title="Часто задаваемые вопросы">FAQ</a></li>
-                    <li class="mobile-only"><a href="/admin" class="text-gray-700 hover:text-blue-500" title="Панель администратора">Админ</a></li>
+                    <li class="mobile-only"><a href="/admin/index.php" class="text-gray-700 hover:text-blue-500" title="Панель администратора">Админ</a></li>
                 </ul>
             </nav>
     
             <!-- Кнопки справа -->
             <div class="header-actions flex items-center">
-                <a href="/admin" class="view-button desktop-only" title="Вход в панель администратора">Админ</a>
+                <a href="/admin/index.php" class="view-button desktop-only" title="Вход в панель администратора">Админ</a>
                 <button class="burger-menu" id="burger-menu">
                     <span class="material-icons">menu</span>
                 </button>
