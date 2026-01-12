@@ -10,6 +10,9 @@ RUN apk add --no-cache \
 # Копируем приложение
 COPY ./public /var/www/html/public
 
+# Копируем init.sql для миграции
+COPY ./postgres/init.sql /var/www/html/postgres/init.sql
+
 # Копируем конфигурацию nginx
 COPY ./nginx/nginx.render.conf /etc/nginx/http.d/default.conf
 
