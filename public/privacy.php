@@ -1,6 +1,7 @@
 <?php
 require_once 'bootstrap.php';
 $pageTitle = "Политика конфиденциальности";
+$pageDescription = "Политика конфиденциальности сайта Automobiles. Информация о сборе, использовании и защите персональных данных пользователей.";
 require_once 'templates/header.php';
 ?>
 

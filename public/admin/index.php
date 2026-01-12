@@ -221,7 +221,7 @@ require_once 'header.php';
             <i class="fas fa-tags"></i><br>
             Добавить категорию
         </a>
-        <a href="../index.php" target="_blank" class="btn btn-primary" style="padding: 15px; text-align: center; text-decoration: none;">
+        <a href="../index.php" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 15px; text-align: center; text-decoration: none;">
             <i class="fas fa-external-link-alt"></i><br>
             Посмотреть сайт
         </a>

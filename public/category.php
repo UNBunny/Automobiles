@@ -45,12 +45,14 @@ require_once 'templates/header.php';
     </div>
 
     <div class="grid grid-cols-1 gap-4">
-        <?php if ($stmt->rowCount() > 0): ?>
-            <?php while ($car = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
-                <div class="custom-card" onclick="window.location.href='/car-details.php?id=<?= $car['id'] ?>'">
+        <?php if (!empty($cars)): ?>
+            <?php foreach ($cars as $car): ?>
+                <div class="custom-card" onclick="window.location.href='/car/<?= $car['id'] ?>'">
                     <button class="favorite-button" onclick="toggleFavorite(event)">♡</button>
                     <div class="custom-image-container">
-                        <img src="<?= escape($car['main_image_url']) ?>" alt="<?= escape($car['manufacturer_name'] . ' ' . $car['model']) ?>">
+                        <img src="<?= escape($car['main_image_url']) ?>" 
+                             alt="<?= escape($car['manufacturer_name'] . ' ' . $car['model']) ?>" 
+                             loading="lazy">
                     </div>
                     <div class="custom-content">
                         <h3 class="custom-title"><?= escape($car['year'] . ' ' . $car['manufacturer_name'] . ' ' . $car['model']) ?></h3>
@@ -70,16 +72,10 @@ require_once 'templates/header.php';
                         <button class="custom-view-button">Смотреть описание</button>
                     </div>
                 </div>
-            <?php endwhile; ?>
+            <?php endforeach; ?>
         <?php else: ?>
             <p class="col-span-full text-center py-8">Нет автомобилей в выбранной категории</p>
         <?php endif; ?>
-    </div>
-
-    <div class="mt-6">
-        <a href="/category.php?category=<?= $selectedCategory ?>&sort=<?= $sort ?>" class="text-blue-500 font-semibold hover:underline">
-            Смотреть все <?= escape($currentCategory['name'] ?? 'электрические') ?> автомобили
-        </a>
     </div>
 </div>
 

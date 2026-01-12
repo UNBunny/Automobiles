@@ -1,15 +1,35 @@
 <?php
 require_once 'bootstrap.php';
 
-$pageTitle = "Часто задаваемые вопросы - FAQ";
-require_once 'templates/header.php';
+$pageTitle = "Часто задаваемые вопросы - FAQ";$pageDescription = "Ответы на часто задаваемые вопросы об электромобилях, гибридах и традиционных автомобилях. Всё, что нужно знать о современных авто.";require_once 'templates/header.php';
 ?>
 
 <div class="breadcrumbs">
-    <a href="/">Главная</a>
+    <a href="/" title="Главная страница">Главная</a>
     <span class="breadcrumbs-separator">/</span>
     <span class="breadcrumbs-current">FAQ</span>
 </div>
+
+<!-- Schema.org для Breadcrumbs -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Главная",
+      "item": "<?= 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] ?>/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "FAQ"
+    }
+  ]
+}
+</script>
 
 <div class="faq-container">
     <h1 class="text-2xl font-bold mb-6">Часто задаваемые вопросы</h1>
@@ -99,5 +119,39 @@ require_once 'templates/header.php';
         </div>
     </div>
 </div>
+
+<!-- Schema.org микроразметка для FAQ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Как найти нужный автомобиль?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Вы можете использовать поиск в верхней части страницы, ввести название модели или производителя. Также доступны фильтры по годам выпуска и сортировка по различным параметрам на странице Автомобили."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Как работают фильтры по годам?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "На странице автомобилей вы можете выбрать год от и год до, чтобы отфильтровать автомобили по диапазону годов выпуска."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Какие категории автомобилей доступны?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "В каталоге представлены различные категории: электромобили, гибриды, бензиновые и дизельные автомобили."
+      }
+    }
+  ]
+}
+</script>
 
 <?php require_once 'templates/footer.php'; ?>

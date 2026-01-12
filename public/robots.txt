@@ -1,0 +1,32 @@
+# Robots.txt for Automobiles
+
+User-agent: *
+Allow: /
+
+# Disallow admin panel
+Disallow: /admin/
+
+# Disallow configs and classes
+Disallow: /config/
+Disallow: /classes/
+
+# Disallow service files
+Disallow: /bootstrap.php
+Disallow: /config.php
+
+# Allow assets
+Allow: /assets/
+
+# Sitemap location
+Sitemap: http://localhost/sitemap.xml
+
+# Yandex specific rules
+User-agent: Yandex
+Allow: /
+
+# Google specific rules
+User-agent: Googlebot
+Allow: /
+
+# Crawl delay for all bots
+Crawl-delay: 1

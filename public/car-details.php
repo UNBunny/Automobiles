@@ -71,17 +71,47 @@ $categories = $db->fetchAll("
 ", [$carId]);
 
 $pageTitle = ($car['manufacturer_name'] ?? '') . " " . ($car['model'] ?? '');
+$pageDescription = "Подробная информация о " . ($car['manufacturer_name'] ?? '') . " " . ($car['model'] ?? '') . " (" . ($car['year'] ?? '') . "): технические характеристики, фотографии, особенности модели.";
+$ogType = "product";
+$ogImage = $car['main_image_url'] ?? '';
 require_once 'templates/header.php';
 ?>
 
 <!-- Breadcrumbs -->
 <div class="breadcrumbs">
-    <a href="/">Главная</a>
+    <a href="/" title="Главная страница">Главная</a>
     <span class="breadcrumbs-separator">/</span>
-    <a href="/cars.php">Автомобили</a>
+    <a href="/cars.php" title="Каталог автомобилей">Автомобили</a>
     <span class="breadcrumbs-separator">/</span>
     <span class="breadcrumbs-current"><?= Utils::escape(($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? '')) ?></span>
 </div>
+
+<!-- Schema.org для Breadcrumbs -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Главная",
+      "item": "<?= 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] ?>/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Автомобили",
+      "item": "<?= 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] ?>/cars.php"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "<?= Utils::escape(($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? '')) ?>"
+    }
+  ]
+}
+</script>
 
 <!-- Кнопка назад -->
 <a href="/cars.php" class="back-button">← Вернуться к списку автомобилей</a>
@@ -90,7 +120,9 @@ require_once 'templates/header.php';
     <!-- Основная секция с фото и характеристиками -->
     <div class="vehicle-section">
         <div class="vehicle-image">
-            <img src="<?= Utils::escape($car['main_image_url'] ?? "") ?>" alt="<?= Utils::escape(($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? '')) ?>">
+            <img src="<?= Utils::escape($car['main_image_url'] ?? "") ?>" 
+                 alt="<?= Utils::escape(($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? '')) ?>" 
+                 loading="lazy">
         </div>
         <div class="vehicle-specs">
             <h1><?= Utils::escape(($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? '') . ' ' . ($car['year'] ?? '')) ?></h1>
@@ -154,7 +186,9 @@ require_once 'templates/header.php';
         <div class="image-grid">
             <?php foreach ($images as $image): ?>
                 <?php if (!$image['is_main']): ?>
-                <img src="<?= Utils::escape($image['image_url'] ?? "") ?>" alt="<?= Utils::escape($image['alt_text'] ?: (($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? ''))) ?>">
+                <img src="<?= Utils::escape($image['image_url'] ?? "") ?>" 
+                     alt="<?= Utils::escape($image['alt_text'] ?: (($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? ''))) ?>" 
+                     loading="lazy">
                 <?php endif; ?>
             <?php endforeach; ?>
         </div>
@@ -175,5 +209,45 @@ require_once 'templates/header.php';
         <?php endif; ?>
     </div>
 </div>
+
+<!-- Schema.org микроразметка для автомобиля -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "<?= Utils::escape(($car['manufacturer_name'] ?? '') . ' ' . ($car['model'] ?? '')) ?>",
+  "description": "<?= Utils::escape($car['description'] ?? '') ?>",
+  "image": "<?= Utils::escape($car['main_image_url'] ?? '') ?>",
+  "brand": {
+    "@type": "Brand",
+    "name": "<?= Utils::escape($car['manufacturer_name'] ?? '') ?>"
+  },
+  "offers": {
+    "@type": "Offer",
+    "availability": "https://schema.org/InStock"
+  },
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "Год выпуска",
+      "value": "<?= Utils::escape($car['year'] ?? '') ?>"
+    }
+    <?php if (!empty($car['engine_type'])): ?>
+    ,{
+      "@type": "PropertyValue",
+      "name": "Тип двигателя",
+      "value": "<?= Utils::escape($car['engine_type'] ?? '') ?>"
+    }
+    <?php endif; ?>
+    <?php if (!empty($car['body_type'])): ?>
+    ,{
+      "@type": "PropertyValue",
+      "name": "Тип кузова",
+      "value": "<?= Utils::escape($car['body_type'] ?? '') ?>"
+    }
+    <?php endif; ?>
+  ]
+}
+</script>
 
 <?php require_once 'templates/footer.php'; ?>

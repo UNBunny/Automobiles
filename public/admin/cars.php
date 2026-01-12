@@ -291,8 +291,8 @@ require_once 'header.php';
                                            onclick="return confirmDelete('Вы уверены, что хотите удалить этот автомобиль?')">
                                             Удалить
                                         </a>
-                                        <a href="../car-details.php?id=<?php echo $car['id']; ?>" 
-                                           target="_blank" class="btn btn-primary btn-sm">
+                                        <a href="../car/<?php echo $car['id']; ?>" 
+                                           target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
                                             Просмотр
                                         </a>
                                     </div>

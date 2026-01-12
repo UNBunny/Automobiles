@@ -1,58 +1,53 @@
+// Проверка и инициализация прокрутки категорий
 const categoryWrapper = document.getElementById('category-wrapper');
 const leftButton = document.querySelector('.scroll-button.left');
 
-function checkScroll() {
-    if (categoryWrapper.scrollLeft > 0) {
-        leftButton.style.display = 'flex';
-    } else {
-        leftButton.style.display = 'none'; 
-    }
-}
-
-categoryWrapper.addEventListener('scroll', checkScroll);
-
-function scrollCategories(direction) {
-    const scrollAmount = 100; 
-    const container = document.getElementById('category-wrapper');
-
-
-    const newScrollLeft = container.scrollLeft + direction * scrollAmount;
-
-    if (newScrollLeft < 0) {
-        container.scrollTo({ left: 0, behavior: 'smooth' });
-    } else if (newScrollLeft > container.scrollWidth - container.clientWidth) {
-        container.scrollTo({ left: container.scrollWidth - container.clientWidth, behavior: 'smooth' });
-    } else {
-        container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+if (categoryWrapper && leftButton) {
+    function checkScroll() {
+        if (categoryWrapper.scrollLeft > 0) {
+            leftButton.style.display = 'flex';
+        } else {
+            leftButton.style.display = 'none'; 
+        }
     }
 
-    setTimeout(checkScroll, 300);
-}
-checkScroll();
+    categoryWrapper.addEventListener('scroll', checkScroll);
 
-// Функция для прокрутки категорий
-function scrollCategories(direction) {
-    const container = document.getElementById('category-wrapper');
-    const scrollAmount = 500; 
-    container.scrollBy({
-        left: direction * scrollAmount,
-        behavior: 'smooth'
-    });
+    function scrollCategories(direction) {
+        const scrollAmount = 100; 
+        const newScrollLeft = categoryWrapper.scrollLeft + direction * scrollAmount;
+
+        if (newScrollLeft < 0) {
+            categoryWrapper.scrollTo({ left: 0, behavior: 'smooth' });
+        } else if (newScrollLeft > categoryWrapper.scrollWidth - categoryWrapper.clientWidth) {
+            categoryWrapper.scrollTo({ left: categoryWrapper.scrollWidth - categoryWrapper.clientWidth, behavior: 'smooth' });
+        } else {
+            categoryWrapper.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+
+        setTimeout(checkScroll, 300);
+    }
+    
+    checkScroll();
+    
+    // Делаем функцию глобальной
+    window.scrollCategories = scrollCategories;
 }
 
 // Функция для выбора категории
-document.querySelectorAll('.category-button').forEach(button => {
-    button.addEventListener('click', () => {
-    
-        document.querySelectorAll('.category-button').forEach(btn => {
-            btn.classList.remove('active');
+const categoryButtons = document.querySelectorAll('.category-button');
+if (categoryButtons.length > 0) {
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            categoryButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
         });
-        //
-        button.classList.add('active');
     });
-});
+}
 
-// Бургер меню
+// Бургер меню для обычных страниц
 document.addEventListener('DOMContentLoaded', function () {
     const burgerMenu = document.getElementById('burger-menu');
     const nav = document.getElementById('nav');
@@ -62,8 +57,34 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Бургер-меню нажато'); 
             nav.classList.toggle('active');
         });
+        
+        // Закрытие меню при клике вне его
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.burger-menu') && !event.target.closest('.nav')) {
+                nav.classList.remove('active');
+            }
+        });
     } else {
-        console.error('Элементы бургер-меню или навигации не найдены!');
+        if (!burgerMenu) console.log('Элемент burger-menu не найден');
+        if (!nav) console.log('Элемент nav не найден');
+    }
+    
+    // Бургер меню для админ-панели
+    const burgerMenuAdmin = document.getElementById('burger-menu-admin');
+    const sidebar = document.querySelector('.sidebar');
+    
+    if (burgerMenuAdmin && sidebar) {
+        burgerMenuAdmin.addEventListener('click', function () {
+            console.log('Админ бургер-меню нажато');
+            sidebar.classList.toggle('active');
+        });
+        
+        // Закрытие меню при клике вне его
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.burger-menu-admin') && !event.target.closest('.sidebar')) {
+                sidebar.classList.remove('active');
+            }
+        });
     }
 });
 
@@ -179,21 +200,17 @@ document.addEventListener('DOMContentLoaded', function() {
 // FAQ аккордеон
 document.addEventListener('DOMContentLoaded', function() {
     const faqQuestions = document.querySelectorAll('.faq-question');
+    console.log('FAQ вопросов найдено:', faqQuestions.length);
     
-    faqQuestions.forEach(question => {
-        question.addEventListener('click', function() {
-            const answer = question.nextElementSibling;
-            const isOpen = answer.style.maxHeight;
+    faqQuestions.forEach((question, index) => {
+        question.addEventListener('click', function(e) {
+            e.preventDefault();
+            const faqItem = this.closest('.faq-item');
+            console.log('Клик на FAQ вопрос #' + index);
             
-            // Закрываем все остальные
-            document.querySelectorAll('.faq-answer').forEach(ans => {
-                ans.style.maxHeight = null;
-            });
-            
-            // Открываем/закрываем текущий
-            if (!isOpen) {
-                answer.style.maxHeight = answer.scrollHeight + 'px';
-            }
+            // Переключаем класс active
+            faqItem.classList.toggle('active');
+            console.log('FAQ item active:', faqItem.classList.contains('active'));
         });
     });
 });
@@ -229,3 +246,34 @@ function clearAllFilters() {
     showLoader();
     window.location.href = basePath;
 }
+
+// Обработка ошибок загрузки изображений - показываем заглушку
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('img');
+    const placeholderPath = '/assets/images/placeholder.svg';
+    
+    images.forEach(function(img) {
+        // Пропускаем favicon и уже загруженные заглушки
+        if (img.src.includes('favicon') || img.src.includes('placeholder.svg')) {
+            return;
+        }
+        
+        img.addEventListener('error', function() {
+            // Проверяем, что еще не заменили на заглушку
+            if (!this.src.includes('placeholder.svg')) {
+                // Для логотипов брендов показываем заглушку с инициалами
+                if (this.classList.contains('brand')) {
+                    this.style.display = 'none';
+                    const placeholder = this.nextElementSibling;
+                    if (placeholder && placeholder.classList.contains('brand-placeholder')) {
+                        placeholder.style.display = 'flex';
+                    }
+                } else {
+                    // Для обычных изображений показываем SVG заглушку
+                    this.src = placeholderPath;
+                    this.alt = 'Изображение недоступно';
+                }
+            }
+        });
+    });
+});

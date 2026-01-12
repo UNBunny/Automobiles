@@ -54,9 +54,19 @@ spl_autoload_register(function ($className) {
 
 // Настройки безопасности для сессий
 ini_set('session.cookie_httponly', '1');
-ini_set('session.cookie_samesite', 'Lax'); // Lax позволяет OAuth редиректы!
+ini_set('session.cookie_samesite', 'Lax');
 ini_set('session.use_strict_mode', '1');
-ini_set('session.cookie_secure', '0'); // Установите '1' если используете HTTPS
+ini_set('session.cookie_secure', '0');
+
+// Функция для отправки Last-Modified заголовка
+function sendLastModified($timestamp = null) {
+    if ($timestamp === null) {
+        $timestamp = time();
+    }
+    $lastModified = gmdate('D, d M Y H:i:s', $timestamp) . ' GMT';
+    header("Last-Modified: $lastModified");
+    header("Cache-Control: public, max-age=3600");
+}
 
 // Старт сессии если еще не стартована
 if (session_status() === PHP_SESSION_NONE) {

@@ -1,7 +1,11 @@
 <?php
 require_once 'bootstrap.php';
 
+// Отправляем Last-Modified заголовок
+sendLastModified();
+
 $pageTitle = "Все автомобили";
+$pageDescription = "Полный каталог автомобилей с фильтрами по производителю, категории и году выпуска. Найдите свой идеальный автомобиль среди сотен моделей.";
 
 // Получение фильтров
 $filters = [
@@ -19,7 +23,7 @@ $filters = array_filter($filters, function($value) {
 
 $sort = $_GET['sort'] ?? 'newest';
 $page = (int)($_GET['page'] ?? 1);
-$perPage = 20;
+$perPage = 10;
 
 // Определяем переменные фильтров для использования в HTML
 $manufacturerFilter = $filters['manufacturer'] ?? null;
@@ -36,6 +40,9 @@ $totalCars = $carModel->count($filters);
 $pagination = Utils::paginate($totalCars, $perPage, $page);
 $cars = $carModel->getAll($filters, $sort, $perPage, $pagination['offset']);
 
+// Получаем всех производителей для фильтра
+$allManufacturers = $manufacturerModel->getAll();
+
 require_once 'templates/header.php';
 
 // Формируем URL для форм
@@ -50,10 +57,31 @@ $hasActiveFilters = !empty($filters);
 
 <!-- Breadcrumbs -->
 <div class="breadcrumbs">
-    <a href="/">Главная</a>
+    <a href="/" title="Главная страница">Главная</a>
     <span class="breadcrumbs-separator">/</span>
     <span class="breadcrumbs-current">Все автомобили</span>
 </div>
+
+<!-- Schema.org для Breadcrumbs -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Главная",
+      "item": "<?= 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] ?>/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Все автомобили"
+    }
+  ]
+}
+</script>
 
 <div class="container py-8">
 
@@ -96,11 +124,6 @@ $hasActiveFilters = !empty($filters);
 </div>
 <?php endif; ?>
 
-
-    <div class="results-summary">
-        <p>Найдено результатов: <strong><?= number_format($totalCars) ?></strong></p>
-    </div>
-
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">
             <?php 
@@ -117,10 +140,37 @@ $hasActiveFilters = !empty($filters);
         </h2>
 
         <div class="filters-container">
-            <?php if ($manufacturerFilter): ?>
-            <?php endif; ?>
+            <!-- Фильтр по производителю -->
+            <div class="manufacturer-filter">
+                <form method="get" action="cars.php" class="manufacturer-form" role="search" aria-label="Фильтр по производителю">
+                    <?php if ($categoryFilter): ?>
+                        <input type="hidden" name="category" value="<?= $categoryFilter ?>">
+                    <?php endif; ?>
+                    <?php if (isset($_GET['year_from'])): ?>
+                        <input type="hidden" name="year_from" value="<?= $_GET['year_from'] ?>">
+                    <?php endif; ?>
+                    <?php if (isset($_GET['year_to'])): ?>
+                        <input type="hidden" name="year_to" value="<?= $_GET['year_to'] ?>">
+                    <?php endif; ?>
+                    <?php if (isset($_GET['sort'])): ?>
+                        <input type="hidden" name="sort" value="<?= $_GET['sort'] ?>">
+                    <?php endif; ?>
+                    
+                    <label for="manufacturer-select" class="filter-label">Производитель</label>
+                    <select id="manufacturer-select" name="manufacturer" class="manufacturer-select" 
+                            onchange="this.form.submit()" aria-label="Выберите производителя">
+                        <option value="">Все производители</option>
+                        <?php foreach ($allManufacturers as $manufacturer): ?>
+                            <option value="<?= $manufacturer['slug'] ?>" 
+                                    <?= ($manufacturerFilter === $manufacturer['slug']) ? 'selected' : '' ?>>
+                                <?= Utils::escape($manufacturer['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </form>
+            </div>
 
-            <form method="get" action="<?= $filterUrl ?>" class="year-filter">
+            <form method="get" action="<?= $filterUrl ?>" class="year-filter" role="search" aria-label="Фильтр по году выпуска">
                 <?php if ($manufacturerFilter): ?>
                     <input type="hidden" name="manufacturer" value="<?= $manufacturerFilter ?>">
                 <?php endif; ?>
@@ -132,20 +182,23 @@ $hasActiveFilters = !empty($filters);
                     <div class="year-input-group">
                         <label for="year-from" class="year-label">Год от</label>
                         <input type="number" id="year-from" name="year_from" class="year-input" 
-                               placeholder="2000" min="2000" max="2030" value="<?= $yearFrom ?>">
+                               placeholder="2000" min="2000" max="2030" value="<?= $yearFrom ?>"
+                               aria-label="Год выпуска от">
                     </div>
                     <div class="year-input-group">
                         <label for="year-to" class="year-label">до</label>
                         <input type="number" id="year-to" name="year_to" class="year-input" 
-                               placeholder="2025" min="2000" max="2030" value="<?= $yearTo ?>">
+                               placeholder="2025" min="2000" max="2030" value="<?= $yearTo ?>"
+                               aria-label="Год выпуска до">
                     </div>
                 </div>
-                <button type="submit" class="apply-button">Применить</button>
+                <button type="submit" class="apply-button" aria-label="Применить фильтр по году">Применить</button>
             </form>
         
             <div class="sorting">
-                <span class="text-gray-700 sort-label">Сортировать по</span>
-                <select class="sort-select ml-2 p-2 border border-gray-300 rounded" onchange="window.location.href=this.value">
+                <label for="sort-select" class="text-gray-700 sort-label">Сортировать по</label>
+                <select id="sort-select" class="sort-select ml-2 p-2 border border-gray-300 rounded" 
+                        onchange="window.location.href=this.value" aria-label="Сортировка автомобилей">
                     <option value="?<?= http_build_query(array_merge($queryParams, ['sort' => 'newest'])) ?>" <?= $sort === 'newest' ? 'selected' : '' ?>>Новее по году выпуска</option>
                     <option value="?<?= http_build_query(array_merge($queryParams, ['sort' => 'year_asc'])) ?>" <?= $sort === 'year_asc' ? 'selected' : '' ?>>Старше по году выпуска</option>
                     <option value="?<?= http_build_query(array_merge($queryParams, ['sort' => 'price_asc'])) ?>" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Цена по возрастанию</option>
@@ -159,10 +212,12 @@ $hasActiveFilters = !empty($filters);
     <div class="grid grid-cols-1 gap-4">
         <?php if (!empty($cars)): ?>
             <?php foreach ($cars as $car): ?>
-                <div class="custom-card" onclick="window.location.href='/car-details.php?id=<?= $car['id'] ?>'">
+                <div class="custom-card" onclick="window.location.href='/car/<?= $car['id'] ?>'">
                     <button class="favorite-button" onclick="toggleFavorite(event)">♡</button>
                     <div class="custom-image-container">
-                        <img src="<?= Utils::escape($car['main_image_url']) ?>" alt="<?= Utils::escape($car['manufacturer_name'] . ' ' . $car['model']) ?>">
+                        <img src="<?= Utils::escape($car['main_image_url']) ?>" 
+                             alt="<?= Utils::escape($car['manufacturer_name'] . ' ' . $car['model']) ?>" 
+                             loading="lazy">
                     </div>
                     <div class="custom-content">
                         <h3 class="custom-title"><?= Utils::escape($car['year'] . ' ' . $car['manufacturer_name'] . ' ' . $car['model']) ?></h3>
@@ -187,7 +242,7 @@ $hasActiveFilters = !empty($filters);
                         <?php if ($car['price']): ?>
                             <p class="custom-price">$<?= Utils::formatNumber($car['price']) ?></p>
                         <?php endif; ?>
-                        <button class="custom-view-button" onclick="window.location.href='/car-details.php?id=<?= $car['id'] ?>'">Смотреть описание</button>
+                        <button class="custom-view-button" onclick="window.location.href='/car/<?= $car['id'] ?>'">Смотреть описание</button>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -203,8 +258,8 @@ $hasActiveFilters = !empty($filters);
     </div>
     
     <?php if ($pagination['total_pages'] > 1): ?>
-        <div class="flex justify-center mt-8">
-            <nav class="flex space-x-2">
+        <div class="pagination-container">
+            <nav class="pagination">
                 <?php if ($pagination['has_prev']): ?>
                     <a href="?<?= http_build_query(array_merge($queryParams, ['page' => $pagination['current_page'] - 1])) ?>" 
                        class="px-3 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">← Предыдущая</a>

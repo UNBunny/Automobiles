@@ -247,7 +247,7 @@ require_once 'header.php';
                                                 Удалить
                                             </span>
                                         <?php endif; ?>
-                                        <a href="../manufacturers.php" target="_blank" class="btn btn-primary btn-sm">
+                                        <a href="../manufacturers.php" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
                                             Просмотр
                                         </a>
                                     </div>

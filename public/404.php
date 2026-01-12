@@ -2,6 +2,7 @@
 require_once 'bootstrap.php';
 
 $pageTitle = "Страница не найдена - 404";
+$pageDescription = "Запрашиваемая страница не найдена. Возможно, она была удалена или перемещена. Воспользуйтесь навигацией для поиска нужной информации.";
 require_once 'templates/header.php';
 ?>
 

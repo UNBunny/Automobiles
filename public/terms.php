@@ -1,6 +1,7 @@
 <?php
 require_once 'bootstrap.php';
 $pageTitle = "Условия использования";
+$pageDescription = "Условия использования сайта Automobiles. Правила пользования каталогом автомобилей и обязанности сторон.";
 require_once 'templates/header.php';
 ?>
 

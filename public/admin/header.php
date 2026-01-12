@@ -348,11 +348,30 @@
             border-radius: 5px;
         }
 
+        .burger-menu-admin {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            font-size: 24px;
+            color: #333;
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
                 height: auto;
-                position: relative;
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 250px;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.active {
+                left: 0;
             }
 
             .main-content {
@@ -369,6 +388,15 @@
 
             .actions {
                 flex-direction: column;
+            }
+
+            .burger-menu-admin {
+                display: block;
+            }
+
+            .header {
+                flex-wrap: wrap;
+                gap: 10px;
             }
         }
     </style>
@@ -396,7 +424,7 @@
                 <li><a href="engine_types.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'engine_types.php' ? 'active' : ''; ?>">
                     Типы двигателей
                 </a></li>
-                <li><a href="../index.php" target="_blank">
+                <li><a href="../index.php" target="_blank" rel="noopener noreferrer">
                     Просмотреть сайт
                 </a></li>
             </ul>
@@ -404,6 +432,9 @@
 
         <main class="main-content">
             <div class="header">
+                <button class="burger-menu-admin" id="burger-menu-admin">
+                    ☰
+                </button>
                 <h1><?php echo isset($title) ? escape($title) : 'Админ-панель'; ?></h1>
                 <a href="logout.php" class="logout-btn">
                     Выйти

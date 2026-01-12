@@ -198,7 +198,7 @@ require_once 'header.php';
                                                 <i class="fas fa-trash"></i>
                                             </span>
                                         <?php endif; ?>
-                                        <a href="../category.php?category=<?php echo $category['slug']; ?>" target="_blank" class="btn btn-primary btn-sm">
+                                        <a href="../category.php?category=<?php echo $category['slug']; ?>" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                     </div>

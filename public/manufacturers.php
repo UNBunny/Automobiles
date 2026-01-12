@@ -1,7 +1,11 @@
 <?php
 require_once 'bootstrap.php';
 
+// Отправляем Last-Modified заголовок
+sendLastModified();
+
 $pageTitle = "Производители";
+$pageDescription = "Каталог ведущих производителей автомобилей мира. Информация о брендах, истории компаний и их модельном ряде.";
 
 $manufacturerModel = new ManufacturerModel();
 $manufacturers = $manufacturerModel->getAll();
@@ -11,10 +15,31 @@ require_once 'templates/header.php';
 
 <!-- Breadcrumbs -->
 <div class="breadcrumbs">
-    <a href="/">Главная</a>
+    <a href="/" title="Главная страница">Главная</a>
     <span class="breadcrumbs-separator">/</span>
     <span class="breadcrumbs-current">Производители</span>
 </div>
+
+<!-- Schema.org для Breadcrumbs -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Главная",
+      "item": "<?= 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] ?>/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Производители"
+    }
+  ]
+}
+</script>
 
 <div class="section">
     <div class="container py-8">
@@ -24,12 +49,13 @@ require_once 'templates/header.php';
         <ul class="brand-list">
             <?php foreach ($manufacturers as $manufacturer): ?>
                 <li>
-                    <a href="cars.php?manufacturer=<?= Utils::escape($manufacturer['slug']) ?>">
+                    <a href="cars.php?manufacturer=<?= Utils::escape($manufacturer['slug']) ?>" 
+                       title="Смотреть автомобили <?= Utils::escape($manufacturer['name']) ?>">
                         <?php if (!empty($manufacturer['logo_url'])): ?>
                             <img src="<?= Utils::escape($manufacturer['logo_url']) ?>" 
-                                 alt="<?= Utils::escape($manufacturer['name']) ?>" 
+                                 alt="Логотип <?= Utils::escape($manufacturer['name']) ?>" 
                                  class="brand"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                 loading="lazy">
                             <div class="brand-placeholder" style="display: none;">
                                 <?= Utils::escape(substr($manufacturer['name'], 0, 2)) ?>
                             </div>
@@ -50,5 +76,34 @@ require_once 'templates/header.php';
         </ul>
     </div>
 </div>
+
+<!-- Schema.org микроразметка для списка производителей -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Производители автомобилей",
+  "itemListElement": [
+    <?php 
+    $itemPosition = 1;
+    foreach ($manufacturers as $manufacturer): 
+    ?>
+    <?= $itemPosition > 1 ? ',' : '' ?>
+    {
+      "@type": "ListItem",
+      "position": <?= $itemPosition ?>,
+      "item": {
+        "@type": "Brand",
+        "name": "<?= Utils::escape($manufacturer['name']) ?>",
+        "url": "<?= 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] ?>/cars.php?manufacturer=<?= Utils::escape($manufacturer['slug']) ?>"
+      }
+    }
+    <?php 
+    $itemPosition++;
+    endforeach; 
+    ?>
+  ]
+}
+</script>
 
 <?php require_once 'templates/footer.php'; ?>
