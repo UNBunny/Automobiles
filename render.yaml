@@ -1,0 +1,32 @@
+databases:
+  - name: automobiles-db
+    databaseName: car_db
+    user: nikita
+    plan: free
+
+services:
+  - type: web
+    name: automobiles
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.render
+    dockerContext: .
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: automobiles-db
+          property: connectionString
+      - key: DB_HOST
+        fromDatabase:
+          name: automobiles-db
+          property: host
+      - key: DB_NAME
+        value: car_db
+      - key: DB_USER
+        fromDatabase:
+          name: automobiles-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: automobiles-db
+          property: password
