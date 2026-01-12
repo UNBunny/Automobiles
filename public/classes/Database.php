@@ -11,7 +11,7 @@ class Database {
         $host = $_ENV['DB_HOST'] ?? 'postgres';
         $dbname = $_ENV['DB_NAME'] ?? 'car_db';
         $username = $_ENV['DB_USER'] ?? 'nikita';
-        $password = $_ENV['DB_PASS'] ?? 'root';
+        $password = $_ENV['DB_PASSWORD'] ?? $_ENV['DB_PASS'] ?? 'root';
         
         try {
             $this->pdo = new PDO(
