@@ -73,6 +73,23 @@
 
         // Инициализация при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
+            // Бургер-меню для админ-панели
+            const burgerMenu = document.getElementById('burger-menu-admin');
+            const sidebar = document.querySelector('.sidebar');
+            
+            if (burgerMenu && sidebar) {
+                burgerMenu.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+
+                // Закрытие меню при клике вне его
+                document.addEventListener('click', function(e) {
+                    if (!sidebar.contains(e.target) && !burgerMenu.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+
             // Автофокус на первое поле формы
             const firstInput = document.querySelector('input[type="text"], input[type="email"], textarea');
             if (firstInput) {
